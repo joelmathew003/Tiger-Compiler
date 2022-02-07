@@ -9,6 +9,9 @@ it is empty *)
     | MUL
     | EOF
     | NEWLINE
+    | DIVI
+    | OPBRACKET
+    | CLBRACKET
 
 (* The nonterminals of the language *)
 %nonterm EXP     of Ast.Expr
@@ -32,7 +35,7 @@ left associative and the precedence increase as you go down this list.
 *)
 
 %left PLUS MINUS  (* + and - are of same precedence *)
-%left MUL         (* higher than + and -            *)
+%left MUL DIVI    (* higher than + and -            *)
 
 (* The type that captures position in the input *)
 %pos int
@@ -47,5 +50,7 @@ EXPS    : (* empty *)          ( []                  )
 
 EXP     : CONST                ( Ast.Const CONST     )
         | EXP PLUS EXP         ( Ast.plus  EXP1 EXP2 )
-	| EXP MINUS EXP        ( Ast.minus EXP1 EXP2 )
-	| EXP MUL   EXP        ( Ast.mul   EXP1 EXP2 )
+	    | EXP MINUS EXP        ( Ast.minus EXP1 EXP2 )
+	    | EXP MUL   EXP        ( Ast.mul   EXP1 EXP2 )
+        | EXP DIVI  EXP        ( Ast.divi  EXP1 EXP2 )
+        | OPBRACKET EXP CLBRACKET (EXP)

@@ -68,3 +68,6 @@ digit = [0-9];
 "+"           => ( Tokens.PLUS  (!lineRef,!lineRef) );
 "-"           => ( Tokens.MINUS  (!lineRef,!lineRef) );
 "*"           => ( Tokens.MUL (!lineRef,!lineRef) );
+"/"           => ( Tokens.DIVI (!lineRef,!lineRef) );
+"("           => ( Tokens.OPBRACKET (!lineRef,!lineRef) );
+")"           => ( Tokens.CLBRACKET (!lineRef,!lineRef) );
