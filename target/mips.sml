@@ -59,7 +59,7 @@ datatype ('l, 't) inst =  Abs  	of 't * 't                          (*The Arithm
                         | Slt 	of 't * 't * 't
                         | Slti 	of 't * 't * 't
                         | Sltu 	of 't * 't * 't
-                        | Sltiu 	of 't * 't * 't
+                        | Sltiu of 't * 't * 't
                         | Sne 	of 't * 't * 't                     
                         | B 	of 'l                               (* Branch and Jump Instructions *)
                         | Bczt 	of 'l
@@ -141,7 +141,7 @@ datatype ('l,'t) stmt =   Inst of ('l, 't) inst
                         | Direc of direc
 
 fun   prReg zero = "$zero"
-    | prReg vt   = "$at"
+    | prReg at   = "$at"
     | prReg v0   = "$v0"
     | prReg v1   = "$v1"
     | prReg a0   = "$v1"
