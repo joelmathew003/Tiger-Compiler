@@ -71,6 +71,7 @@ datatype ('l, 't) inst =  Abs  	of 't * 't                          (*The Arithm
                         | Bgez 	of 't * 'l
                         | Bgezal of 't * 'l
                         | Bgt 	of 't * 't * 'l
+                        | Bgtu 	of 't * 't * 'l
                         | Bgtz 	of 't * 'l
                         | Ble 	of 't * 't * 'l
                         | Bleu 	of 't * 't * 'l
@@ -111,7 +112,8 @@ datatype ('l, 't) inst =  Abs  	of 't * 't                          (*The Arithm
                         | Syscall
                         | Break of int
                         | Nop                                       
-                        | Mfhi of 't                                (* Data Movement Instructions *)
+                        | Move of 't * 't                           (* Data Movement Instructions *)
+                        | Mfhi of 't                                
                         | Mflo of 't
                         | Mthi of 't
                         | Mtlo of 't
@@ -241,6 +243,7 @@ fun     prInst (Abs(r1,r2))       = "abs "^prReg(r1)^", "^prReg(r2)
     |   prInst (Bgez(r1, l1)) 			= "bgez " ^ prReg(r1) ^ ", " ^ prLabel(l1)
     |   prInst (Bgezal(r1, l1)) 		= "bgezal " ^ prReg(r1) ^ ", " ^ prLabel(l1)
     |   prInst (Bgt(r1, r2, l1)) 		= "bgt " ^ prReg(r1) ^ ", " ^ prReg(r2) ^ ", " ^ prLabel(l1)
+    |   prInst (Bgtu(r1, r2, l1)) 		= "bgtu " ^ prReg(r1) ^ ", " ^ prReg(r2) ^ ", " ^ prLabel(l1)
     |   prInst (Bgtz(r1, l1)) 			= "bgtz " ^ prReg(r1) ^ ", " ^ prLabel(l1)
     |   prInst (Ble(r1, r2, l1)) 		= "ble " ^ prReg(r1) ^ ", " ^ prReg(r2) ^ ", " ^ prLabel(l1)
     |   prInst (Bleu(r1, r2, l1)) 	    = "bleu " ^ prReg(r1) ^ ", " ^ prReg(r2) ^ ", " ^ prLabel(l1)
@@ -281,6 +284,7 @@ fun     prInst (Abs(r1,r2))       = "abs "^prReg(r1)^", "^prReg(r2)
     |   prInst (Syscall)                = "syscall"
     |   prInst (Break(i))               = "break "^Int.toString(i)
     |   prInst (Nop)                    = "nop"  
+    |   prInst (Move (r1, r2))          = "move "^ prReg(r1)^", "^prReg(r2) 
     |   prInst (Mfhi (l1))              = "mfhi "^ prReg(l1)
     |   prInst (Mflo (l1))              = "mflo "^ prReg(l1)
     |   prInst (Mthi (l1))              = "mthi "^ prReg(l1)
