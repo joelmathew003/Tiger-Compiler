@@ -174,8 +174,8 @@ fun   prReg zero = "$zero"
     | prReg ra   = "$ra"
     | prReg (Imm (i)) = Int.toString(i)
 
-fun   prLabel (UserDefined s ) = "_" ^ s
-    | prLabel (TempLabel i)  = "_" ^ Int.toString i
+fun   prLabel (UserDefined s ) = s
+    | prLabel (TempLabel i)  = Int.toString i
 
 (* 
 Print the instructions when the labels are strings and
