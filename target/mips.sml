@@ -109,7 +109,7 @@ datatype ('l, 't) inst =  Abs  	of 't * 't                          (*The Arithm
                         | Usw 	of 't * 'l                          
                         | Rfe                                       (* Trap and Exception Instructions *)
                         | Syscall
-                        | Break
+                        | Break of int
                         | Nop                                       
                         | Mfhi of 't                                (* Data Movement Instructions *)
                         | Mflo of 't
@@ -279,7 +279,7 @@ fun     prInst (Abs(r1,r2))       = "abs "^prReg(r1)^", "^prReg(r2)
     |   prInst (Usw(r1, l1))		    = "usw " ^ prReg(r1) ^ ", " ^ prLabel(l1)   
     |   prInst (Rfe)                    = "rfe"
     |   prInst (Syscall)                = "syscall"
-    |   prInst (Break)                  = "break"
+    |   prInst (Break(i))               = "break "^Int.toString(i)
     |   prInst (Nop)                    = "nop"  
     |   prInst (Mfhi (l1))              = "mfhi "^ prReg(l1)
     |   prInst (Mflo (l1))              = "mflo "^ prReg(l1)
@@ -297,7 +297,7 @@ fun   prDirec (align(n))   =   ".align "^Int.toString(n)
     | prDirec (asciiz(n))  =   ".asciiz "^n
     | prDirec (byte(n))    =   ".byte "^prList(n)
     | prDirec (data(n))    =   ".data "^n
-    | prDirec (extern(s,n))=   ".extern "^s^Int.toString(n)
+    | prDirec (extern(s,n))=   ".extern "^s^" "^Int.toString(n)
     | prDirec (globl(s))   =   ".globl "^s
     | prDirec (half(x))    =   ".half "^prList(x)
     | prDirec (kdata(s))   =   ".kdata "^s
