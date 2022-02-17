@@ -174,7 +174,7 @@ fun   prReg zero = "$zero"
     | prReg ra   = "$ra"
     | prReg (Imm (i)) = Int.toString(i)
 
-fun   prLabel (UserDefined s ) = s
+fun   prLabel (UserDefined s) = s
     | prLabel (TempLabel i)  = Int.toString i
 
 (* 
