@@ -314,4 +314,6 @@ fun   prStmt (Inst(i))  = prInst i
     | prStmt (Direc(d)) = prDirec d
 (* actual code that SPIM can understand is (string, reg) inst *)
 
+fun prProg [] = ""
+|   prProg (x::xs) = (prStmt x)^"\n"^(prProg xs)
 end

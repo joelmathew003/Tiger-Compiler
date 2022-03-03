@@ -95,6 +95,8 @@ fun compileProg env [] = [MIPS.Li(v0,Imm(10))]@[MIPS.Syscall]
                               res@compileProg env1 xs
                             end
                 
+fun compile prog = compileProg AtomMap.empty prog
+
 end
 
 
