@@ -1,6 +1,7 @@
 structure Ast = struct
     datatype Expr  = Const of int
-                    | Op    of Expr * BinOp * Expr
+                    | Var of string
+                    | Op  of Expr * BinOp * Expr
 
      and BinOp = Plus
                | Minus
