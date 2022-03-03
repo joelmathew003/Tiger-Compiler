@@ -1,0 +1,55 @@
+10 rules not reduced
+
+warning: rule <EXPS : > will never be reduced
+warning: rule <EXPS : EXP NEWLINE EXPS > will never be reduced
+warning: rule <EXP : CONST > will never be reduced
+warning: rule <EXP : EXP PLUS EXP > will never be reduced
+warning: rule <EXP : EXP MINUS EXP > will never be reduced
+warning: rule <EXP : EXP MUL EXP > will never be reduced
+warning: rule <EXP : EXP DIVI EXP > will never be reduced
+warning: rule <EXP : OPBRACKET EXP CLBRACKET > will never be reduced
+warning: rule <EXP : VAR ASSIGN EXP > will never be reduced
+warning: rule <EXP : PRINT EXP > will never be reduced
+
+state 0:
+
+	PROGRAM : . STMT 
+	PROGRAM : . STMT NEWLINE 
+
+
+	STMT	goto 1
+	PROGRAM	goto 3
+
+	.	error
+
+
+state 1:
+
+	PROGRAM : STMT .  (reduce by rule 0)
+	PROGRAM : STMT . NEWLINE 
+
+	NEWLINE	shift 2
+
+
+	.	reduce by rule 0
+
+
+state 2:
+
+	PROGRAM : STMT NEWLINE .  (reduce by rule 1)
+
+
+
+	.	reduce by rule 1
+
+
+state 3:
+
+
+	EOF	accept
+
+
+	.	error
+
+2 of 6 action table entries left after compaction
+2 goto table entries
