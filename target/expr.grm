@@ -1,0 +1,64 @@
+(* This is the preamble where you can have arbitrary sml code. For us
+it is empty *)
+
+%%
+(* The terminals or tokens of the language *)
+%term CONST of INT
+    | PLUS
+    | MINUS
+    | MUL
+    | EOF
+    | NEWLINE
+    | DIV
+    | OPBRACKET
+    | CLBRACKET
+    | ASSIGN
+    | PRINT
+    | VAR
+
+
+(* The nonterminals of the language *)
+%nonterm EXP     of Ast.Expr
+       | EXPS    of Ast.Expr list
+       | STMT    of Ast.Stmt
+       | PROGRAM of Ast.Stmt list
+
+%eop EOF (* What token to use as end of parsing token              *)
+%verbose (* Generates a printed form of the table in expr.grm.desc *)
+%pure
+
+
+%name Expr (* The prefix to use on the name of LrValFun structure *)
+
+
+%noshift EOF
+(*
+
+Operator precedence and associativity. The %left says the operator is
+left associative and the precedence increase as you go down this list.
+
+*)
+
+%left PLUS MINUS  (* + and - are of same precedence *)
+%left MUL  DIV    (* higher than + and -            *)
+%left OP   CL     (* ( and ) are of same precedence *)
+
+(* The type that captures position in the input *)
+%pos int
+
+%%
+
+PROGRAM : STMT                 ( Ast.Stmt )
+        | STMT NEWLINE         ( Ast.Stmt )
+
+EXPS    : (* empty *)          ( []                  )
+        | EXP NEWLINE EXPS     ( EXP :: EXPS         )
+
+EXP     : CONST                ( Ast.Const CONST     )
+        | EXP PLUS EXP         ( Ast.Plus  EXP1 EXP2 )
+        | EXP MINUS EXP        ( Ast.Minus EXP1 EXP2 )
+        | EXP MUL   EXP        ( Ast.Mul   EXP1 EXP2 )
+        | EXP DIVI  EXP        ( Ast.divi  EXP1 EXP2 )
+        | OPBRACKET EXP CLBRACKET (EXP)
+        | VAR ASSIGN EXP       ( Ast.Assignment VAR EXP)
+        | PRINT EXP            ( Ast.Print EXP)
