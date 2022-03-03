@@ -22,7 +22,7 @@
 # these programs depend on the following sml files. So I have defined
 # a variable COMMON for this.
 
-COMMON=ast.sml machine.sml temp.sml
+COMMON=ast.sml mips.sml temp.sml
 
 
 # Default rules for lex and yacc
