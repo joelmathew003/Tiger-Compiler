@@ -14,7 +14,7 @@ fun tempToReg 0 = MIPS.a0
   | tempToReg 8 = MIPS.t6
   | tempToReg 9 = MIPS.t7
 
-fun compileExpr env t (Ast.Const x) = ([MIPS.Li(tempToReg(t),x)], env)
+fun compileExpr env t (Ast.Const x) = ([MIPS.Li(tempToReg(t),Imm(x))], env)
   | compileExpr env t (Ast.Var v) = let
                                       val value = case AtomMap.find(env, Atom.atom(v)) of
                                       (SOME(u)) => ([MIPS.Move(tempToReg(t), tempToReg(u))], env)
@@ -61,10 +61,40 @@ fun compileExpr env t (Ast.Const x) = ([MIPS.Li(tempToReg(t),x)], env)
                                                   end
 
 
-(* fun compileStmt (Ast.Assignment(id,e)) = 
-  | compileStmt (Ast.Print (e))        =  *)
+fun compileStmt env (Ast.Assignment(id,e)) =  let
+                                            val value = case AtomMap.find(env, Atom.atom(id)) of
+                                              (SOME(u)) => let
+                                                              val (res1, env1) = compileExpr env u e1
+                                                              (* ([MIPS.Move(tempToReg(t), tempToReg(u))], env) *)
+                                                            in
+                                                              (res1, env)
+                                                            end
+                                              |NONE =>  let
+                                                          val tnew = Temp.newtemp()
+                                                          val env1 = AtomMap.insert(env,Atom.atom(v),tnew)
+                                                          val (res1, env2) = compileExpr env1 u e1
+                                                        in  
+                                                          (res1, env2)
+                                                        end
+                                            in
+                                              value
+                                            end
+  | compileStmt env (Ast.Print (e)) = let 
+                                        val t1 = Temp.newtemp()
+                                        val (res,env1) =  compileExpr env t1 e
+                                        val env2 = AtomMap.insert(env1,Atom.atom("a0"),t1)
+                                        (* val env3 = AtomMap.insert(env1,Atom.atom("v0"),t1) *)
+                                      in
+                                        (res@[MIPS.Li(a0,t1)]@[MIPS.Li(v0,Imm(0))]@[MIPS.Syscall], env2)
+                                      end
 
-
+fun compileProg env [] = [MIPS.Li(v0,Imm(10))]@[MIPS.Syscall]
+  | compileProg env x::xs = let
+                              val (res,env1) = compileStmt env x
+                            in
+                              res@compileProg env1 xs
+                            end
+                
 end
 
 
