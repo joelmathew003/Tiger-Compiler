@@ -11,6 +11,11 @@ structure Temp :> TEMP = struct
 		      (* you can use IntInf.int if you want unbounded *)
 
    val nextTemp       = ref 2 (* Keep track of how many temps have been allocated *)
-   fun newtemp  _     = let val t = !nextTemp in nextTemp := t+1; t+1 end
+   fun newtemp  _     = let 
+                            val t = !nextTemp 
+                        in 
+                            if (t>8) then (TextIO.output(TextIO.stdErr, "Error: Temp registers used up \n"); OS.Process.exit OS.Process.failure)
+                            else nextTemp := t+1; t+1 
+                        end
    fun tempToString t = "t"^Int.toString t
 end
