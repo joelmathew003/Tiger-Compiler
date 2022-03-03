@@ -3,7 +3,8 @@ it is empty *)
 
 %%
 (* The terminals or tokens of the language *)
-%term CONST of INT
+%term CONST of int
+    | VAR of string
     | PLUS
     | MINUS
     | MUL
@@ -14,13 +15,12 @@ it is empty *)
     | CLBRACKET
     | ASSIGN
     | PRINT
-    | VAR
 
 
 (* The nonterminals of the language *)
 %nonterm EXP     of Ast.Expr
-       | EXPS    of Ast.Expr list
        | STMT    of Ast.Stmt
+       | STMTS   of Ast.Stmt list
        | PROGRAM of Ast.Stmt list
 
 %eop EOF (* What token to use as end of parsing token              *)
@@ -48,17 +48,19 @@ left associative and the precedence increase as you go down this list.
 
 %%
 
-PROGRAM : STMT                 ( Ast.Stmt )
-        | STMT NEWLINE         ( Ast.Stmt )
+PROGRAM : STMTS                     ( STMTS )
 
-EXPS    : (* empty *)          ( []                  )
-        | EXP NEWLINE EXPS     ( EXP :: EXPS         )
+STMTS :                             ([])
+        | STMT NEWLINE STMTS        (STMT :: STMTS)
+
+STMT :    VAR ASSIGN EXP       ( Ast.assign VAR EXP)
+        | PRINT EXP            ( Ast.Print EXP)
 
 EXP     : CONST                ( Ast.Const CONST     )
-        | EXP PLUS EXP         ( Ast.Plus  EXP1 EXP2 )
-        | EXP MINUS EXP        ( Ast.Minus EXP1 EXP2 )
-        | EXP MUL   EXP        ( Ast.Mul   EXP1 EXP2 )
+        | VAR                  ( Ast.Var VAR)
+        | EXP PLUS EXP         ( Ast.plus  EXP1 EXP2 )
+        | EXP MINUS EXP        ( Ast.minus EXP1 EXP2 )
+        | EXP MUL   EXP        ( Ast.mul   EXP1 EXP2 )
         | EXP DIVI  EXP        ( Ast.divi  EXP1 EXP2 )
         | OPBRACKET EXP CLBRACKET (EXP)
-        | VAR ASSIGN EXP       ( Ast.Assignment VAR EXP)
-        | PRINT EXP            ( Ast.Print EXP)
+        

@@ -13,4 +13,10 @@ structure Ast = struct
       
     datatype prog = EXPS of (Stmt list)
 
+    fun plus  a b = Op (a, Plus, b)
+    fun minus a b = Op (a, Minus, b)
+    fun mul   a b = Op (a, Mul, b)
+    fun divi  a b = Op (a, Divi, b)
+    fun assign v e = Assignment(v,e)
+
 end

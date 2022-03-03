@@ -68,10 +68,10 @@ digit = [0-9];
 "+"           => ( Tokens.PLUS  (!lineRef,!lineRef) );
 "-"           => ( Tokens.MINUS  (!lineRef,!lineRef) );
 "*"           => ( Tokens.MUL (!lineRef,!lineRef) );
-"/"           => ( Tokens.DIV (!lineRef,!lineRef) );
-"("           => ( Tokens.OP (!lineRef,!lineRef) );
-")"           => ( Tokens.CL (!lineRef,!lineRef) );
+"/"           => ( Tokens.DIVI (!lineRef,!lineRef) );
+"("           => ( Tokens.OPBRACKET (!lineRef,!lineRef) );
+")"           => ( Tokens.CLBRACKET (!lineRef,!lineRef) );
 ":="          => ( Tokens.ASSIGN (!lineRef,!lineRef) );
 "print"       => ( Tokens.PRINT (!lineRef,!lineRef) );
-[a-z A-Z][a-z A-Z 0-9]* => (Tokens.VAR(!lineRef, !lineRef));
+[a-z A-Z][a-z A-Z 0-9]* => (Tokens.VAR(yytext, !lineRef, !lineRef));
 
