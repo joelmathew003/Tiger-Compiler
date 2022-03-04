@@ -141,6 +141,7 @@ datatype Label = UserDefined of string  (* main, fib *)
 (* The instructions and assembler directives *)
 datatype ('l,'t) stmt =   Inst of ('l, 't) inst
                         | Direc of direc
+                        | label of Label
 
 fun   prReg zero = "$zero"
     | prReg at   = "$at"
@@ -176,8 +177,8 @@ fun   prReg zero = "$zero"
     | prReg ra   = "$ra"
     | prReg (Imm (i)) = Int.toString(i)
 
-fun   prLabel (UserDefined s) = s
-    | prLabel (TempLabel i)  = Int.toString i
+fun   prLabel (UserDefined s) = s^":"
+    | prLabel (TempLabel i)  = "$L"^Int.toString i^":"
 
 (* 
 Print the instructions when the labels are strings and
@@ -312,6 +313,7 @@ fun   prDirec (align(n))   =   ".align "^Int.toString(n)
 
 fun   prStmt (Inst(i))  = prInst i
     | prStmt (Direc(d)) = prDirec d
+    | prStmt (label(l)) = prLabel l 
 (* actual code that SPIM can understand is (string, reg) inst *)
 
 fun prProg [] = ""

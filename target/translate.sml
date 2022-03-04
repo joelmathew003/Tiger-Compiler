@@ -23,7 +23,7 @@ fun compileExpr env t (Ast.Const x) = ([MIPS.Inst(MIPS.Li(tempToReg(t),MIPS.Imm(
                                                   val tnew = Temp.newtemp()
                                                   val env1 = AtomMap.insert(env,Atom.atom(v),tnew)
                                                 in  
-                                                  ([MIPS.Inst(MIPS.Addi(tempToReg(t), tempToReg(tnew), MIPS.Imm(0)))], env1)
+                                                  ([MIPS.Inst(MIPS.Move(tempToReg(t), tempToReg(tnew)))], env1)
                                                 end
                                     in
                                       value
@@ -86,19 +86,20 @@ fun compileStmt env (Ast.Assignment(id,e)) =  let
                                         val env2 = AtomMap.insert(env1,Atom.atom("a0"),t1)
                                         (* val env3 = AtomMap.insert(env1,Atom.atom("v0"),t1) *)
                                       in
-                                        (res@[MIPS.Inst(MIPS.Li(MIPS.a0,tempToReg(t1)))]@[MIPS.Inst(MIPS.Li(MIPS.v0,MIPS.Imm(0)))]@[MIPS.Inst(MIPS.Syscall)], env2)
+                                        (res@[MIPS.Inst(MIPS.Move(MIPS.a0,tempToReg(t1)))]@[MIPS.Inst(MIPS.Li(MIPS.v0,MIPS.Imm(1)))]@[MIPS.Inst(MIPS.Syscall)], env2)
                                       end
 
-fun compileProg env []:(MIPS.Label, MIPS.reg) MIPS.stmt list= [MIPS.Inst(MIPS.Li(MIPS.v0,MIPS.Imm(10)))]@[MIPS.Inst(MIPS.Syscall)]
+fun compileProg env [] = [MIPS.Inst(MIPS.Li(MIPS.v0,MIPS.Imm(10)))]@[MIPS.Inst(MIPS.Syscall)]
   | compileProg env (x::xs) = let
                               val (res,env1) = compileStmt env x
                             in
                               res@compileProg env1 xs
                             end
                 
-fun compile prog = compileProg AtomMap.empty prog
+fun compile prog = [MIPS.Direc(MIPS.globl("main")), MIPS.label(MIPS.UserDefined("main"))]@compileProg AtomMap.empty prog
 
 end
+
 
 
 
