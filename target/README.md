@@ -5,9 +5,8 @@ Build the programs using the following make command
 ```
 make
 ```
-Save the test input of the form of the tiger subset language into a file say `test.inp` and store it in a 
-file say `test.out` run it using the command
-
+Save the test input of the form of the tiger subset language into a file say `test.inp`. Run it using the command
+and store the output in a file say `test.out` 
 ```
 ./ec test.inp > test.out
 
