@@ -61,7 +61,7 @@ all: ec
 .PHONY: all clean test
 
 clean:
-	rm -f *.lex.sml
+	rm -f *.lex.sml *.out
 	rm -f *.grm.sml *.grm.desc *.grm.sig ec
 
 
