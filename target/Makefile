@@ -69,4 +69,5 @@ ec: ec.sml ec.mlb expr.grm.sml expr.lex.sml ${COMMON} translate.sml
 	mlton ec.mlb
 
 test: all
-	${CURDIR}/ec test.expr 
+	./ec test.inp
+

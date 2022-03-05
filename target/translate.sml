@@ -66,7 +66,6 @@ fun compileStmt env (Ast.Assignment(id,e)) =  let
                                             val value = case AtomMap.find(env, Atom.atom(id)) of
                                               (SOME(u)) => let
                                                               val (res1, env1) = compileExpr env u e
-                                                              (* ([MIPS.Move(tempToReg(t), tempToReg(u))], env) *)
                                                             in
                                                               (res1, env)
                                                             end
@@ -84,7 +83,6 @@ fun compileStmt env (Ast.Assignment(id,e)) =  let
                                         val t1 = Temp.newtemp()
                                         val (res,env1) =  compileExpr env t1 e
                                         val env2 = AtomMap.insert(env1,Atom.atom("a0"),t1)
-                                        (* val env3 = AtomMap.insert(env1,Atom.atom("v0"),t1) *)
                                       in
                                         (res@[MIPS.Inst(MIPS.Move(MIPS.a0,tempToReg(t1)))]@[MIPS.Inst(MIPS.Li(MIPS.v0,MIPS.Imm(1)))]@[MIPS.Inst(MIPS.Syscall)], env2)
                                       end
