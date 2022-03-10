@@ -64,6 +64,13 @@ digit = [0-9];
 		   in updateLine (newlineCount yytext); Tokens.NEWLINE (old, !lineRef)
 		   end
 		 );
+
+"for"         => ( Tokens.FOR (!lineRef,!lineRef) );
+"to"          => ( Tokens.TO (!lineRef,!lineRef) );
+"do"          => ( Tokens.DO (!lineRef,!lineRef) );
+"done"        => ( Tokens.DONE (!lineRef,!lineRef) );
+"print"       => ( Tokens.PRINT (!lineRef,!lineRef) );
+
 {digit}+      => ( Tokens.CONST (toInt yytext, !lineRef, !lineRef) );
 "+"           => ( Tokens.PLUS  (!lineRef,!lineRef) );
 "-"           => ( Tokens.MINUS  (!lineRef,!lineRef) );
@@ -72,6 +79,8 @@ digit = [0-9];
 "("           => ( Tokens.OPBRACKET (!lineRef,!lineRef) );
 ")"           => ( Tokens.CLBRACKET (!lineRef,!lineRef) );
 ":="          => ( Tokens.ASSIGN (!lineRef,!lineRef) );
-"print"       => ( Tokens.PRINT (!lineRef,!lineRef) );
-[a-z A-Z][a-z A-Z 0-9]* => (Tokens.VAR(yytext, !lineRef, !lineRef));
+
+
+[a-zA-Z][a-zA-Z0-9_]* => (Tokens.VAR(yytext, !lineRef, !lineRef));
+
 

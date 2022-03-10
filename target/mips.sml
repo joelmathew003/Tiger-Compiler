@@ -177,8 +177,8 @@ fun   prReg zero = "$zero"
     | prReg ra   = "$ra"
     | prReg (Imm (i)) = Int.toString(i)
 
-fun   prLabel (UserDefined s) = s^":"
-    | prLabel (TempLabel i)  = "$L"^Int.toString i^":"
+fun   prLabel (UserDefined s) = s
+    | prLabel (TempLabel i)  = "$L"^Int.toString i
 
 (* 
 Print the instructions when the labels are strings and
@@ -311,9 +311,12 @@ fun   prDirec (align(n))   =   ".align "^Int.toString(n)
     | prDirec (text(s))    =   ".text "^s
     | prDirec (word(x))    =   ".word "^prList(x)
 
+fun   prInstLabel (UserDefined s) = s^":"
+    | prInstLabel (TempLabel i)  = "$L"^Int.toString i^":" 
+
 fun   prStmt (Inst(i))  = prInst i
     | prStmt (Direc(d)) = prDirec d
-    | prStmt (label(l)) = prLabel l 
+    | prStmt (label(l)) = prInstLabel l 
 (* actual code that SPIM can understand is (string, reg) inst *)
 
 fun prProg [] = ""

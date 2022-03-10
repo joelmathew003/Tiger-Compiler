@@ -3,17 +3,17 @@ open AtomMap *)
 structure Translate =
 struct
 
-fun tempToReg 0 = MIPS.a0
-  | tempToReg 1 = MIPS.v0
-  | tempToReg 2 = MIPS.t0
-  | tempToReg 3 = MIPS.t1
-  | tempToReg 4 = MIPS.t2
-  | tempToReg 5 = MIPS.t3
-  | tempToReg 6 = MIPS.t4
-  | tempToReg 7 = MIPS.t5
-  | tempToReg 8 = MIPS.t6
-  | tempToReg 9 = MIPS.t7
+fun tempToReg 0 = MIPS.t0
+  | tempToReg 1 = MIPS.t1
+  | tempToReg 2 = MIPS.t2
+  | tempToReg 3 = MIPS.t3
+  | tempToReg 4 = MIPS.t4
+  | tempToReg 5 = MIPS.t5
+  | tempToReg 6 = MIPS.t6
+  | tempToReg 7 = MIPS.t7
   | tempToReg _ = MIPS.Imm(1)
+
+fun tempToLabel n = MIPS.TempLabel(n)
 
 fun compileExpr env t (Ast.Const x) = ([MIPS.Inst(MIPS.Li(tempToReg(t),MIPS.Imm(x)))], env)
   | compileExpr env t (Ast.Var v) = let
@@ -23,7 +23,7 @@ fun compileExpr env t (Ast.Const x) = ([MIPS.Inst(MIPS.Li(tempToReg(t),MIPS.Imm(
                                                   val tnew = Temp.newtemp()
                                                   val env1 = AtomMap.insert(env,Atom.atom(v),tnew)
                                                 in  
-                                                  ([MIPS.Inst(MIPS.Move(tempToReg(t), tempToReg(tnew)))], env1)
+                                                  ([], env1)
                                                 end
                                     in
                                       value
@@ -82,10 +82,34 @@ fun compileStmt env (Ast.Assignment(id,e)) =  let
   | compileStmt env (Ast.Print (e)) = let 
                                         val t1 = Temp.newtemp()
                                         val (res,env1) =  compileExpr env t1 e
-                                        val env2 = AtomMap.insert(env1,Atom.atom("a0"),t1)
+                                        (* val env2 = AtomMap.insert(env1,Atom.atom("a0"),t1) *)
                                       in
-                                        (res@[MIPS.Inst(MIPS.Move(MIPS.a0,tempToReg(t1)))]@[MIPS.Inst(MIPS.Li(MIPS.v0,MIPS.Imm(1)))]@[MIPS.Inst(MIPS.Syscall)], env2)
+                                        (res@[MIPS.Inst(MIPS.Move(MIPS.a0,tempToReg(t1)))]@[MIPS.Inst(MIPS.Li(MIPS.v0,MIPS.Imm(1)))]@[MIPS.Inst(MIPS.Syscall)], env1)
                                       end
+
+  | compileStmt env (Ast.For(v,c1,c2,stmtList)) =  let
+                                                      val loopTemp = Temp.newtemp()
+                                                      val loopEnv = AtomMap.insert(env,Atom.atom(v),loopTemp)
+                                                      val stopTemp = Temp.newtemp()
+                                                      val loopLabel = Temp.newlabel()
+                                                      val exitLabel = Temp.newlabel()
+                                                      fun loopCompile e [] = []
+                                                        | loopCompile e (x::xs) = let
+                                                                                      val (res,env1) = compileStmt e x
+                                                                                    in
+                                                                                      res@loopCompile env1 xs
+                                                                                    end
+                                                      val loopStmts = loopCompile loopEnv stmtList
+                                                    in
+                                                      ([MIPS.Inst(MIPS.Li(tempToReg(loopTemp),MIPS.Imm(c1))), MIPS.Inst(MIPS.Li(tempToReg(stopTemp),MIPS.Imm(c2))),
+                                                        MIPS.label(tempToLabel(loopLabel)),
+                                                        MIPS.Inst(MIPS.Bgt(tempToReg(loopTemp), tempToReg(stopTemp), tempToLabel(exitLabel)))]
+                                                      @loopStmts
+                                                      @[MIPS.Inst(MIPS.Addi(tempToReg(loopTemp),tempToReg(loopTemp),MIPS.Imm(1))),
+                                                        MIPS.Inst(MIPS.J(tempToLabel(loopLabel))),
+                                                        MIPS.label(tempToLabel(exitLabel))], env)
+                                                    end
+
 
 fun compileProg env [] = [MIPS.Inst(MIPS.Li(MIPS.v0,MIPS.Imm(10)))]@[MIPS.Inst(MIPS.Syscall)]
   | compileProg env (x::xs) = let
