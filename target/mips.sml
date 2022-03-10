@@ -311,12 +311,9 @@ fun   prDirec (align(n))   =   ".align "^Int.toString(n)
     | prDirec (text(s))    =   ".text "^s
     | prDirec (word(x))    =   ".word "^prList(x)
 
-fun   prInstLabel (UserDefined s) = s^":"
-    | prInstLabel (TempLabel i)  = "$L"^Int.toString i^":" 
-
 fun   prStmt (Inst(i))  = prInst i
     | prStmt (Direc(d)) = prDirec d
-    | prStmt (label(l)) = prInstLabel l 
+    | prStmt (label(l)) = prLabel l^":" 
 (* actual code that SPIM can understand is (string, reg) inst *)
 
 fun prProg [] = ""
