@@ -51,7 +51,16 @@ functor BasicBlocks (I : INST) = struct
 
     fun basicBlocks [] = [[]]
     |   basicBlocks (x::xs) =   if(I.isJumpLike(x) andalso I.isTarget(x)) then []::([x]::basicBlocks xs)
-                                else if(I.isJumpLike(x))               then [x]::basicBlocks xs
+                                else if(I.isJumpLike(x))               
+                                then 
+                                let
+                                  val blist = basicBlocks xs
+                                  val curr = hd(blist)
+                                  fun conv [] = pop blist
+                                  |   conv _  = blist
+                                in
+                                  [x]::(conv curr)
+                                end
                                 else if(I.isTarget(x)) 
                                 then
                                 let
