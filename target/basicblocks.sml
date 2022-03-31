@@ -56,10 +56,10 @@ functor BasicBlocks (I : INST) = struct
                                 let
                                   val blist = basicBlocks xs
                                   val curr = hd(blist)
-                                  fun conv [] = pop blist
-                                  |   conv _  = blist
+                                  fun newblist [] = pop blist
+                                  |   newblist _  = blist
                                 in
-                                  [x]::(conv curr)
+                                  [x]::(newblist curr)
                                 end
                                 else if(I.isTarget(x)) 
                                 then
