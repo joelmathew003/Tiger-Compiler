@@ -5,6 +5,7 @@ $(SML_LIB)/smlnj-lib/Util/smlnj-lib.mlb
 ast.sml         (* the syntax                                   *)
 mips.sml        (* The stack machine                            *)
 temp.sml
+basicblocks.sml
 translate.sml   (* The translate function                       *)
 expr.grm.sig    (* The signature file generated for the grammar *)
 expr.grm.sml    (* The parser                                   *)
