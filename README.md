@@ -21,9 +21,9 @@ and store the output in a file say `test.out` or run `make test` to do the same
 ./ec test.inp > test.out
 
 ```
-Using SPIM, read and run the `test.out` file
+`test.out` now contains the MIPS code and the basic blocks. To test working of the MIPS code using SPIM, read and run the file containing the MIPS code.
 ```
 spim
-read "test.out"
+read "filename"
 run
 ```
