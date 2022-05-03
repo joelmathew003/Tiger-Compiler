@@ -1,5 +1,4 @@
-COMMON=src/ast.sml target/mips.sml src/temp.sml src/ir.sml  target/translate.sml src/graph.sml src/treeir.sml
-
+COMMON=src/ast.sml target/mips.sml src/temp.sml target/translate.sml src/graph.sml 
 
 src/%.lex.sml: src/%.lex
 	mllex $<
@@ -7,19 +6,17 @@ src/%.lex.sml: src/%.lex
 src/%.grm.sml: src/%.grm
 	mlyacc $<
 
-
 all: ec
 
 .PHONY: all clean test
 
 clean:
-	rm -f *.lex.sml *.out *.asm
-	rm -f *.grm.sml *.grm.desc *.grm.sig ec
+	rm -rf src/*.lex.sml *.out *.asm
+	rm -rf src/*.grm.sml src/*.grm.desc src/*.grm.sig ec
 
-
-ec: ec.sml ec.mlb expr.grm.sml expr.lex.sml ${COMMON} translate.sml
+ec: ec.sml ec.mlb src/expr.grm.sml src/expr.lex.sml ${COMMON}
 	mlton ec.mlb
 
 test: all
-	./ec test.inp
+	./ec test.inp > test.out
 

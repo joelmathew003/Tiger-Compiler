@@ -19,5 +19,5 @@ structure Ast = struct
     fun mul   a b = Op (a, Mul, b)
     fun divi  a b = Op (a, Divi, b)
     fun assign v e = Assignment(v,e)
-    fun for (Var(v)) (Const(c1)) (Const(c2)) e = For(v,c1,c2,e)
+    (* fun for (Var(v)) (Const(c1)) (Const(c2)) e = For(v,c1,c2,e) *)
 end
