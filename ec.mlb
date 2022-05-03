@@ -4,7 +4,7 @@ $(SML_LIB)/smlnj-lib/Util/smlnj-lib.mlb
 
 src/ast.sml         (* the syntax                                   *)
 target/mips.sml        (* The stack machine                            *)
-src/temp.sml
+target/temp.sml
 target/basicblocks.sml
 target/translate.sml   (* The translate function                       *)
 src/graph.sml
