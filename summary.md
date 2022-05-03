@@ -23,8 +23,9 @@ Roll No : 111901026
 - Basic functionalities of the Tiger language like variables, constants, for loops etc. have been implemented.
 - Used an environment to store variables as temporary registers.
 - Created Basic block functionality as a functor.
-- Added graph.sml for future use (allocating registers)
+- Added `graph.sml` for future use (allocating registers)
 - Pretty printing to see the usage of temporary registers
+- A basic structure of Tree structure written.
 
 ## TODO
 
