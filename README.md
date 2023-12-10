@@ -1,7 +1,4 @@
-# CS3140 Compiler Design Laboratory
-
-Name : Joel Sam Mathew \
-Roll No : 111901026 
+# Tiger Compiler
 
 ## Directories
 `reverse-polish/` -> contains reverse-polish lab files \
